@@ -5,3 +5,4 @@ ultralytics
 keras-ocr
 opencv-python
 tensorflow
+gunicorn==19.7.1
