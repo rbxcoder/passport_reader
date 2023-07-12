@@ -4,3 +4,4 @@ flask-cors
 ultralytics
 keras-ocr
 opencv-python
+tensorflow
