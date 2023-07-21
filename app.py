@@ -10,7 +10,7 @@ app = Flask(__name__)
 CORS(app)
 app.config['DEBUG'] = True
 imagepath='getImage.png'
-@app.route('/api/passportdetection', methods=['GET','POST'])
+@app.route('/', methods=['GET','POST'])
 def detect():
     try:
         imageb = request.get_json()['image']
