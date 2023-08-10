@@ -2,12 +2,15 @@ from ultralytics import YOLO
 import numpy
 import cv2
 import tensorflow as tf
-import keras_ocr
+import easyocr
+
 
 # load a trained YOLOv8n model
 model = YOLO("best.pt")  
-pipeline = keras_ocr.pipeline.Pipeline()
+# pipeline = keras_ocr.pipeline.Pipeline()
 names = model.names
+reader = easyocr.Reader(['en'])
+scale_percent = 150 # percent of original size
 def detection(imagepath,imageDet) :
     data={}
     
@@ -25,9 +28,14 @@ def detection(imagepath,imageDet) :
                 conf = box.conf.numpy()[0]
                 bb = box.xyxy.numpy()[0].astype(int)
                 crop = imageDet[bb[1]:bb[3], bb[0]:bb[2]]
-                image_array = keras_ocr.tools.read(crop)
-                predictions = pipeline.recognize([image_array])
-                for prediction in predictions[0]:
-                    text += prediction[0] 
-                data[names[int(clsID)]]=text
+                width = int(crop.shape[1] * scale_percent / 100)
+                height = int(crop.shape[0] * scale_percent / 100)
+                dim = (width, height)
+                crop = cv2.resize(crop, dim, interpolation = cv2.INTER_AREA)
+                results = reader.readtext(crop)
+                detected_text = [result[1] for result in results]
+                # Join the detected text into a single string
+                final_text = ' '.join(detected_text)
+                # Close the reader
+                data[names[int(clsID)]]=final_text
     return data
