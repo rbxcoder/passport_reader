@@ -1,8 +1,9 @@
 numpy
+pillow==9.5.0
 flask
 flask-cors
 ultralytics
-keras-ocr
+easyocr==1.7.0
 opencv-python
 tensorflow
 gunicorn==19.7.1
